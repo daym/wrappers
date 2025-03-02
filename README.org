@@ -12,25 +12,25 @@ Small wrappers that don't fit anywhere else.
 
 ** Guix niceties
 
-- try
-- contain
-- enter
-- guix-new-package
-- guix-new-profile
-- guix-new-project
-- guix-profile-manifest
-- guile-nrepl
-- run-ares-rs
-- e
+- e - edit the given file with emacs
+- try - try out packages without installing them
+- contain - open a container, given a manifest
+- enter - enter an environment (not container), given a manifest
+- guix-new-package - create a new guix package definition
+- guix-new-profile - create a new guix profile definition
+- guix-new-project - create a new gnu project
+- guix-profile-manifest - determine manifest, given a profile path
+- guile-nrepl - start guile including a nREPL on port 7888
+- run-ares-rs - start guile including ARES IDE support
 
 ** Rust development
 
-- in-rust-nightly
-- rust-gdb
+- in-rust-nightly - run the given command in Rust nightly (in a podman container)
+- rust-gdb - run the given command in a gdb with rust scripts
 
 ** Make containers less annoying
 
-- efs
+- efs - run the given command in in-rust-nightly, but share one level up
 
 ** Compare two binary files
 
@@ -48,22 +48,22 @@ Small wrappers that don't fit anywhere else.
 
 ** System tools
 
-- enable-zram
-- kill-port-binder
-- mkautostart
-- run-ebusd
-- rr_zen_workaround.py
+- enable-zram - enable compressed RAM swap
+- kill-port-binder - kill a process hoarding a port, given its port number
+- mkautostart - create an XDG startup entry for the given command
+- run-ebusd - run ebusd
+- rr_zen_workaround.py - enable AMD Zen workarounds
 
 ** PDF tools
 
-- pdfscissors
+- pdfscissors - crop (empty) borders from PDF files
 
 ** Containerized tools
 
-- mplayer
-- mathematica
-- mathematica-reqpwd
-- wolfram
-- wolframscript
-- redox
-- wrap-llamafile
+- mplayer - containerized mplayer
+- mathematica - containerized mathematica
+- mathematica-reqpwd - you don't need this
+- wolfram - containerized wolfram
+- wolframscript - containerized wolframscript
+- redox - containerized redox OS
+- wrap-llamafile - containerized LLM

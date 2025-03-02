@@ -27,9 +27,6 @@ Small wrappers that don't fit anywhere else.
 
 - in-rust-nightly - run the given command in Rust nightly (in a podman container)
 - rust-gdb - run the given command in a gdb with rust scripts
-
-** Make containers less annoying
-
 - efs - run the given command in in-rust-nightly, but share one level up
 
 ** Compare two binary files

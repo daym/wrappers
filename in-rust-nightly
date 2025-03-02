@@ -1,0 +1,72 @@
+#!/bin/sh
+set -e
+
+root="${PWD}"
+
+if [ "$1" = "-k" ]
+then
+	shift
+	opts=""
+else
+	opts="--rm"
+fi
+
+if [ "$1" = "-r" ]
+then
+	shift
+	root="$1"
+	root="`realpath \"${root}\"`"
+	shift
+fi
+
+if [ "$1" = "-w" ]
+then
+	shift
+	p="$1"
+	p="`realpath \"${p}\"`"
+	shift
+else
+	p="${PWD}"
+fi
+
+if [ "$1" = "-r" ]
+then
+	shift
+	root="$1"
+	root="`realpath \"${root}\"`"
+	shift
+fi
+
+if [ "${root}" = "/" ]
+then
+	root="/usr/local"
+fi
+#root="/ex1"
+#echo "root:${root}" 1>&2
+
+# TODO: ssh-agent -s; SSH_AUTH_SOCK; SSH_AGENT_PID
+# TODO: Remove '-it'
+# TODO: -e COLUMNS="`tput cols`" -e LINES="`tput lines`"
+# TODO: -v /usr/local/cargo:/usr/local/cargo
+# TODO -v /usr/local/rustup/toolchains:/usr/local/rustup/toolchains
+# /usr/local/cargo/registry/src/github.co
+
+# Technically, we don't need to make /usr/local/rustup/toolchains available!
+
+# -v /usr/local/cargo:/usr/local/cargo -v /usr/local/rustup:/usr/local/rustup [-w ...]
+
+# keyring and tmp is for ssh forwarding if cargo tries to get stuff using git ssh
+shares="-v /run/user/`id -u`/keyring:/run/user/`id -u`/keyring -v /run/user/`id -u`/ssh-agent:/run/user/`id -u`/ssh-agent -v /tmp:/tmp -v /usr/local/cargo:/usr/local/cargo -v /usr/local/rustup:/usr/local/rustup -v ${HOME}/.cache/JetBrains/IdeaIC2022.3/intellij-rust/stdlib"
+# For intellij-rust plugin development:
+shares="${shares} -v ${HOME}/src/idea/idea-native2-debugger/build/idea-sandbox/system/intellij-rust:${HOME}/src/idea/idea-native2-debugger/build/idea-sandbox/system/intellij-rust"
+shares="${shares} -v ${HOME}/.cargo/credentials.toml:${HOME}/.cargo/credentials.toml"
+shares="${shares} -v ${HOME}/.ssh/known_hosts:${HOME}/.ssh/known_hosts"
+shares="${shares} -v ${HOME}/.config/git:${HOME}/.config/git"
+# TODO: CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+# -v "/etc/ssl:/etc/ssl" is not possible since docker can't resolve the symlinks inside /etc/ssl .
+# TODO: Alternatively, you can also use export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=/usr/bin/arm-linux-gnueabihf-gcc (for the arm-linux-gnueabihf target in this example)
+
+# Docker needs extra: --user "$(id -u)":"$(id -g)"
+
+# --net=pasta:-4
+exec podman run -i ${opts} -e LEDGER_COMMAND -e CARGO_PKG_VERSION -e CARGO_MANIFEST_DIR -e HOME -e OUT_DIR -e RUSTC_BOOTSTRAP -e RUSTC_FORCE_INCREMENTAL -e SSH_AGENT_PID -e SSH_AUTH_SOCK -e RUSTFLAGS -e CARGO_NET_OFFLINE -e CARGO_NET_GIT_FETCH_WITH_CLI -e CARGO_LOG -e OXIDE_WTW_ROOT -e RUST_TARGET_PATH -e TARGET_DIR -e PAYLOAD_A -e USER -e RUST_BACKTRACE  -v "${root}:${root}" ${shares} -w "${p}" rust-nightly-extra:latest "$@"

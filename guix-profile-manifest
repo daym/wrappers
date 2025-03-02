@@ -1,0 +1,13 @@
+#!/home/dannym/.guix-profile/bin/guile
+!#
+;; Given a filesystem path to a profile, return a manifest.
+(use-modules (guix profiles)
+      (ice-9 match)
+      (ice-9 pretty-print))
+
+(match (command-line)
+  ((_ where)
+   (pretty-print
+    `(specifications->manifest
+      ',(map manifest-entry-name (manifest-entries (profile-manifest where))))))
+  (_ (error "Please provide the path to a Guix profile.")))

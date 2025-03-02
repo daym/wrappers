@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# TODO: LLAMA_ARG_SPLIT_MODE
+
+set -e
+# for /gnu/store/gkx7jb8iy6wdkm25g1sz54m5vi6g33cr-rocm-toolchain-5.7.1/bin/amdgpu-arch
+#? export LD_LIBRARY_PATH=/gnu/store/mm3xzw1nc9yy95j6a24kb6hqfgp4vhic-rocm-toolchain-5.7.1/lib
+#echo "$@" >>/tmp/ARGS
+cd ~/src/llama
+
+# Do not forget about <｜User｜> and <｜Assistant｜> tokens! - Or use a chat template formatter
+#llama-cli        --model ~/x/llama/DeepSeek-R1-Distill-Llama-8B-Q2_K.gguf         --threads 16        --prompt '<｜User｜>What is 1+1? Be straightforward. Do not be verbose.<｜Assistant｜>'  
+
+# wizardcoder-python-34b-v1.0.Q3_K_M.llamafile # too slow
+# wizardcoder-python-13b-main.llamafile # OK
+# Meta-Llama-3-8B-Instruct-Q4_K_M # broken
+
+# Working great
+export LLAMA_ARG_MODEL="${HOME}/x/llama/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf"
+export FLASH_ATTN="--flash-attn 1"
+
+# Very slow but works!!
+#export LLAMA_ARG_MODEL="${HOME}/x/llama/DeepSeek-R1-Distill-Llama-70B-Q3_K_M.gguf"
+#export LLAMA_ARG_CHAT_TEMPLATE="zephyr"
+#export FLASH_ATTN=""
+
+#export LLAMA_ARG_MODEL="${HOME}/x/llama/DeepSeek-R1-Distill-Llama-8B-Q2_K.gguf" # well, stuck in a loop. Tried multiple times.
+#export LLAMA_ARG_CHAT_TEMPLATE="zephyr" #   '<｜User｜>You are a helpful assistant<｜Assistant｜>'
+#export FLASH_ATTN=""
+
+# -no-cnv disables auto conversation mode.
+
+# export LLAMA_ARG_MODEL="${HOME}/x/llama/x/llama/DeepSeek-R1-Distill-Llama-8B-Q2_K.gguf" # broken and stuck in a loop
+# MODEL="Meta-Llama-3.1-8B-Instruct-Q8_0.gguf" # broken
+# MODEL="Llama-3.2-3B-Instruct.Q6_K.llamafile" # broken
+# MODEL="Llama-3.2-3B-Instruct.Q6_K.llamafile" # working
+#export FLASH_ATTN=""
+
+# TODO: --ctx-size !?
+# --server --host 127.0.0.1
+# too slow: exec guix shell --expose=/home/dannym --network --container --emulate-fhs coreutils gzip llama-cpp -- llama-server -m /home/dannym/x/llama/Mistral-Small-Instruct-2409-Q8_0.gguf "$@"
+# doesn't work well exec guix shell --expose=/home/dannym --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server -m /home/dannym/x/llama/DeepSeek-R1-Distill-Llama-8B-Q2_K.gguf "$@" # TODO: test
+
+# TODO: --n-gpu-layers 20
+
+# Deepseek: Just 4K. Because deepseek doesn't allow for the use of flash attention it means you can't run quantised qkv
+exec guix shell --expose=/home/dannym --preserve='^LLAMA_' --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server ${FLASH_ATTN} --n-gpu-layers 20 "$@" # working great
+
+exec guix shell --expose=/home/dannym/x --preserve=LD_LIBRARY_PATH --network --container --emulate-fhs coreutils gzip hipamd rocm-toolchain -- ~/x/llama/llamafile-run -m ${HOME}/x/llama/llama-3.2-3b-instruct-q8_0.gguf -ngl 9999 -c 4096
+
+# llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 147, got 146
+exec guix shell --expose=/home/dannym/x --preserve=LD_LIBRARY_PATH --network --container --emulate-fhs coreutils gzip hipamd rocm-toolchain -- ~/x/llama/llamafile-run -m ${HOME}/x/llama/Meta-Llama-3.1-8B-Instruct-Q5_K_M.gguf -ngl 9999 -c 4096
+exec guix shell --expose=/home/dannym/x --network --container --emulate-fhs coreutils gzip -- ~/x/llama/Meta-Llama-3-8B-Instruct.Q5_K_M.llamafile "$@"
+exec guix shell --expose=/home/dannym/backup --network --container --emulate-fhs coreutils gzip -- /home/dannym/x/llama/llamafile-0.7 -m /home/dannym/x/llama/wizardcoder-python-13b-main.llamafile "$@"
+#exec guix shell --network --container --emulate-fhs coreutils gzip -- /home/dannym/x/llama/phi-2.Q5_K_M.llamafile "$@"

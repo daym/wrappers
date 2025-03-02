@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec guix shell openjdk -- java -Duser.home="${HOME}" -jar ~/src/pdfscissors/newer-briss/Briss-2.0/build/libs/Briss-2.0-all.jar "$@"

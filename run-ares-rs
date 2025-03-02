@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec guix shell guile-next guile-ares-rs -- guile -c '((@ (ares server) run-nrepl-server))'

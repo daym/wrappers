@@ -1,0 +1,131 @@
+#!/bin/sh
+# This is a compat script that makes Guix system seem like Debian at first blush.
+
+# TODO: --max-jobs=4
+# TODO: subst foo-dbg -> foo:debug
+
+# Note: guix package can SIMULTANEOUSLY install and remove packages in the same transaction.
+
+#transformations="--with-inputs=qt=glibc --with-inputs=texlive=glibc --with-inputs=mysql=glibc" # --with-inputs=foo=bar@1
+
+set -e -o pipefail
+
+if [ "$1" = "search" ]
+then
+	exec guix package -s "$2"
+elif [ "$1" = "install" ]
+then
+	shift
+	exec guix package ${transformations} -i "$@" --fallback --keep-failed
+elif [ "$1" = "update" ]
+then
+	guix pull
+elif [ "$1" = "dist-upgrade" ]
+then
+	shift
+	sudo -E guix system reconfigure ${transformations} /etc/config.scm --fallback "$@"
+	exec guix package ${transformations} --fallback -u . "$@"
+elif [ "$1" = "remove" -o "$1" = "purge" ]
+then
+	shift
+	exec guix package -r "$@"
+elif [ "$1" = "size" ]
+then
+	shift
+	exec guix size "$@"
+elif [ "$1" = "show" ]
+then
+	shift
+	exec guix package ${transformations} --show="$1"
+elif [ "$1" = "list" ]
+then
+	shift
+	regex="^$1$"
+	regex="${regex/\*/.*}" # FIXME replace more
+	regex="${regex/\?/.}" # FIXME replace more
+	regex="${regex/\?/.}" # FIXME replace more
+	regex="${regex/\?/.}" # FIXME replace more
+	exec guix package -A "${regex}"
+elif [ "$1" = "edit" ] # new!!!
+then
+	shift
+	exec guix edit "$@"
+elif [ "$1" = "source" ]
+then
+	shift
+	for s in `guix build --substitute-urls=https://ci.guix.gnu.org --fallback -S "$@"`
+	do
+		if [ -d "${s}" ]
+		then
+			cp -r "${s}" . || exit 1
+		else
+			tar xvf "${s}" || {
+				unzip "${s}" || {
+					(zstd -c -d "${s}" | tar xf) || {
+						exit 1
+					}
+				}
+			}
+		fi
+	done
+elif [ "$1" = "build" ]
+then
+	shift
+	guix build ${transformations} --rounds=2 --keep-failed --fallback "$@"
+elif [ "$1" = "lint" ] # NEW
+then
+	shift
+	exec guix lint "$@"
+elif [ "$1" = "submit" ] # NEW
+then
+	cd ~/src/guix
+	shift
+	package="$1"
+	guix build "${package}" --fallback
+	# Warning: sometimes this doesn't fail
+	guix lint "${package}"
+	echo "Hit ENTER"
+	read s
+	# TODO or use "apt show stellarium" |grep "^location: "
+	fnspec="`EDITOR=echo guix edit ${package}`"
+	#+165 /x/home/dannym/src/guix/gnu/packages/bash.scm
+	IFS=" "
+	set -- ${fnspec}
+	fns="$2"
+	IFS=""
+	git diff ${fns} |less
+	git commit -S ${fns}
+	git format-patch -1 -o outgoing ${fns}
+	# FIXME send-email the correct patch
+elif [ "$1" = "environment" ]
+then
+	shift
+	exec guix environment --fallback "$@"
+elif [ "$1" = "rdepends" ]
+then
+	# Or: https://gist.github.com/mbakke/f354272666fbef09c5229f7b853778f1
+	shift
+	exec guix refresh --list-dependent "$@"
+	# Or: guix graph -t reverse-package dlib >a.dot for more details
+	#exec guix graph -t reverse-bag "$1"
+	#exec guix refresh -l "$1"
+else
+	echo "Usage: $0 install <package>">&2
+	echo "or: $0 update">&2
+	echo "or: $0 dist-upgrade">&2
+	echo "or: $0 remove <package>">&2
+	echo "or: $0 purge <package>">&2
+	echo "or: $0 search <text>">&2
+	echo "or: $0 list <packageglob>">&2
+	echo "or: $0 size <package>">&2
+	echo "or: $0 show <package>">&2
+	echo "or: $0 source <package>">&2
+	echo "or: $0 build <package>">&2
+	echo "or: $0 lint <package>">&2
+	echo "or: $0 rdepends <package>">&2
+	echo "or: $0 submit <package> to submit a package upstream">&2
+	exit 1
+fi
+
+# guix package upgrade --keep-going
+# TODO: guix graph --path emacs libunistring to find out WHERE emacs depends on libunistring

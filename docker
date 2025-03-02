@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Note: Local docker podman emu">&2
+exec podman "$@"

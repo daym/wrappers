@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import sys
+
+af = open(sys.argv[1], "rb")
+bf = open(sys.argv[2], "rb")
+
+a = af.read()
+b = bf.read()
+
+assert len(a) == len(b)
+nok = 0
+range_i = None
+for i, (A, B) in enumerate(zip(a, b)):
+    if A != B:
+      if range_i is not None and i == range_i + 1:
+         print("|", A,B, end="")
+      else:
+         print('\n@', i, A,B, end="")
+      range_i = i
+      nok += 1
+
+print("\n{}% identical ({} B differences)".format(100*(len(a) - nok)/len(a), nok))

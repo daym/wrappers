@@ -1,0 +1,4 @@
+#/usr/bin/env python3
+
+# See <https://gitlab.com/nonguix/nonguix>
+exec guix shell dotnet -- dotnet "$@"

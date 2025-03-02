@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cat << EOF >manifest.scm.new && mv manifest.scm.new manifest.scm
+(specifications->manifest
+  (list ))
+EOF
+echo "Use 'guix shell -C -m manifest.scm' to load profile." 

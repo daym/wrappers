@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "Usage: mkautostart <executable>">&2
+	exit 1
+fi
+
+n="$1"
+basen="$(basename "${n}")"
+cat << EOF > ~/.config/autostart/"${basen}.desktop"
+[Desktop Entry]
+Name=${basen}
+GenericName=${basen}
+Comment=${basen}
+Exec=$@
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=true
+EOF

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# The desktop files that emacs ships are buggy, so we have our own desktop file that calls this script.
+
+# echo "$1" >> /tmp/Q
+
+escaped="$1"
+
+# bash
+escaped="${escaped//\"/\\\"}"
+
+exec emacsclient --alternate-editor= --reuse-frame --eval "(message-mailto \"$1\")"

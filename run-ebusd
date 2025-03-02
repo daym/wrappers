@@ -1,0 +1,26 @@
+exec ebusd --scanconfig -d ens:ebus-bbf440:9999 --logfile=/tmp/ebusd.log --pidfile=/tmp/ebusd.pid --accesslevel='*' --lograwdata --lograwdatafile=/tmp/ebusd.raw
+exit 77
+
+cat <<EOF
+better defaults for logfile: /var/log/ebusd.log
+better defaults for pidfile: /var/run/ebusd.log
+
+PACKAGE_LOGFILE
+PACKAGE_PIDFILE
+
+./config.h.cmake:#define PACKAGE_LOGFILE LOCALSTATEDIR "/log/" PACKAGE ".log"
+
+./configure.ac:AC_DEFINE_UNQUOTED(PACKAGE_LOGFILE, LOCALSTATEDIR "/log/" PACKAGE ".log", [The path and name of the log file.])
+
+--localstatedir=/var
+
+Doesn't need root!
+
+ebusd 3.0 supports ACL now.  
+
+For example, to always run on "install" level
+  --accesslevel=install
+or maybe even
+  --accesslevel=*
+for ALL levels WITHOUT requiring authentication.
+EOF

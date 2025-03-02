@@ -1,0 +1,30 @@
+#!/bin/sh
+
+exec guile --no-auto-compile /home/dannym/.config/guix/current/bin/guix shell --container --no-cwd --network \
+  --preserve='^DBUS_' \
+  --preserve='^DRI_PRIME$' \
+  --preserve='^GDK_SCALE$' \
+  --preserve='^GUIX_LOCPATH$' \
+  --preserve='^LD_LIBRARY_PATH$'
+  --preserve='^LIBVA_DRIVERS_PATH$' \
+  --preserve='^MANGOHUD' \
+  --preserve='^PRESSURE_VESSEL_' \
+  --preserve='_PROXY$' \
+  --preserve='_proxy$' \
+  --preserve='^QT_X11_NO_MITSHM$' \
+  --preserve='^SDL_' \
+  --preserve='^STEAM_' \
+  --preserve='^SSL_' \
+  --preserve='^TZ' \
+  --preserve='^XAUTHORITY$' \
+  --preserve='^XDG_CURRENT_DESKTOP$' \
+  --preserve='^XDG_DATA_HOME$' \
+  --preserve='^XDG_RUNTIME_DIR$' \
+  --preserve='^XDG_SESSION_(CLASS|TYPE)$' \
+  --preserve='^(WAYLAND_)?DISPLAY$' \
+  --preserve=^CAPSULE_DEBUG$ \
+  --preserve=^G_MESSAGES_DEBUG$ \
+  --preserve=^LD_DEBUG$ \
+  --preserve=^LIBGL_DEBUG$ \
+  --expose=/dev/bus/usb --expose=/dev/dri --expose=/dev/input --expose=/dev/uinput --expose=/etc/machine-id --expose=/etc/localtime --expose=/etc/os-release --expose=/sys/class/drm --expose=/sys/class/hwmon --expose=/sys/class/hidraw --expose=/sys/class/input --expose=/sys/class/power_supply --expose=/sys/class/powercap --expose=/sys/dev --expose=/sys/devices --expose=/var/run/dbus --share=/dev/hidraw0 --share=/dev/hidraw1 --share=/dev/hidraw2 --share=/dev/hidraw3 --share=/dev/hidraw4 --share=/dev/hidraw5 --share=/dev/hidraw6 --share=/dev/hidraw7 --share=/dev/hidraw8 --share=/dev/hidraw9 --share=/dev/shm --share=/tmp \
+  --share=/home/dannym/.local/share/guix-sandbox-home=/home/dannym --share=/home/dannym/.config/pulse --share=/run/user/1000/pulse --share=/run/user/1000/bus --share=/run/user/1000/wayland-1 -m /gnu/store/n867jnnsq1xjgx36bzyfcmqd7117f8pn-nonguix-container-manifest.scm -- "$@"

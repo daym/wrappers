@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ ! -f "manifest.scm" ]
+then
+	echo "Error: No manifest found. Try 'guix-new-profile' in order to create one here.">&2
+	exit 1
+fi
+# Usage: --network|-N
+exec guix shell --check -C -m manifest.scm "$@"

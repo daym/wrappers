@@ -1,0 +1,95 @@
+#!/bin/sh
+
+# TODO download newest debian package, extract and parse control file, and generate appropriate guix block (dependencies, source).
+# See https://packages.debian.org/unstable/allpackages
+
+filename="$1"
+if [ -z "${filename}" ]
+then
+	echo "Usage: guix-new-package <filename> <packagename>">&2
+	exit 1
+fi
+packagename="$2"
+if [ -z "${packagename}" ]
+then
+	echo "Usage: guix-new-package <filename> <packagename>">&2
+	exit 1
+fi
+
+new=
+if [ ! -f "${filename}" ]
+then
+	new=1
+	cat <<EOF >"${filename}"
+(use-modules (guix packages))
+(use-modules (guix gexp))
+;(use-modules (guix build-system dub))
+(use-modules (guix build-system glib-or-gtk))
+(use-modules (guix build-system gnu))
+;(use-modules (guix build-system maven))
+;(use-modules (guix build-system node))
+(use-modules (gnu packages gnome))
+(use-modules (gnu packages glib))
+(use-modules (gnu packages gtk))
+(use-modules (gnu packages mail))
+(use-modules (gnu packages pkg-config))
+(use-modules ((guix licenses) #:prefix license:))
+
+(define %source-dir (getcwd))
+
+EOF
+	source='(local-file %source-dir
+                        #:recursive? #t)'
+    #if ! [ -f ".envrc" ]
+    #then
+    #  echo "guix_shell --container --network" > .envrc
+    #fi
+else
+	source='(origin
+              (method git-fetch)
+              (uri (git-reference
+                     (url "http://example.com/foo.git")
+                     (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1vsrc1s62kv1i84skm6k5zy868gayjck268qwj38rpspc8c5qgih")))'
+fi
+
+build_system="gnu-build-system"
+if ! [ "${packagename#d-}" = "${packagename}" ]
+then
+  build_system="dub-build-system"
+fi
+if ! [ "${packagename#node-}" = "${packagename}" ]
+then
+  build_system="node-build-system"
+fi
+if ! [ "${packagename#java-}" = "${packagename}" ]
+then
+  build_system="maven-build-system"
+fi
+
+cat >> "${filename}" <<EOF
+
+(define-public ${packagename}
+  (package
+    (name "${packagename}")
+    (version "FIXME")
+    (source ${source})
+    (build-system ${build_system})
+    (native-inputs
+     (list pkg-config))
+    (inputs
+     (list))
+    (synopsis "${packagename}")
+    (description "FIXME")
+    (home-page "FIXME")
+    (license license:gpl3+))) ; FIXME
+EOF
+if ! [ -z "${new}" ]
+then
+	echo "${packagename}" >> "${filename}"
+fi
+
+#exec ./pre-inst-env guix edit "${packagename}"

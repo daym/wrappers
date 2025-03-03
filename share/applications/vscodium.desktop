@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=VSCodium
+GenericName=Text Editor
+Exec=codium --ozone-platform-hint=auto
+Icon=code
+Type=Application
+Actions=new-empty-window
+Keywords=vscode
+Categories=TextEditor;Development;IDE
+StartupNotify=true
+StartupWMClass=Code
+Comment[en]=Code Editing. Redefined.
+Comment=Code Editing. Redefined.

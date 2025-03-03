@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Mathematica 13
+Comment=Technical Computing System
+Exec=swaymsg exec mathematica
+Icon=wolfram-mathematica
+StartupWMClass=
+StartupNotify=true
+MimeType=application/mathematica;application/x-mathematica;application/vnd.wolfram.nb;application/vnd.wolfram.cdf;application/vnd.wolfram.player;application/vnd.wolfram.mathematica.package;application/vnd.wolfram.wl;x-scheme-handler/wolfram+cloudobject;x-scheme-handler/wolframmathematica+cloudobject;

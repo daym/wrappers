@@ -1,0 +1,9 @@
+[Default Applications]
+application/mathematica=wolfram-mathematica13.desktop
+application/x-mathematica=wolfram-mathematica13.desktop
+application/vnd.wolfram.nb=wolfram-mathematica13.desktop
+application/vnd.wolfram.cdf=wolfram-mathematica13.desktop
+application/vnd.wolfram.player=wolfram-mathematica13.desktop
+application/vnd.wolfram.mathematica.package=wolfram-mathematica13.desktop
+application/vnd.wolfram.wl=wolfram-mathematica13.desktop
+x-scheme-handler/wolfram\+cloudobject=wolfram-mathematica13.desktop

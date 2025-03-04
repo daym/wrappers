@@ -2,4 +2,10 @@
 
 set -e
 cd ~/.local/Mathematica/13/3
-exec guix shell --emulate-fhs --container --share=/etc/resolv.conf --share=/tmp --expose=/run --network bash coreutils gawk grep xz xcb-proto tar findutils sed mesa fontconfig gcc alsa-lib strace bzip2 libxdmcp libx11 libxau libxcb zlib libpng@1.6.37 expat libxkbcommon qtbase qtwayland wayland --preserve=DISPLAY --preserve=WAYLAND_DISPLAY --preserve='.*' --preserve=XDG_SESSION_TYPE --share=/home/dannym/.Wolfram --share=/home/dannym/.Mathematica --share=/home/dannym/.cache --share=/home/dannym/.config --share='/home/dannym/Wolfram Mathematica' -- /home/dannym/.local/Mathematica/13/3/SystemFiles/Activation/Linux-x86-64/reqpwd.exe "$@"
+exec guix shell --emulate-fhs --container --share=/etc/resolv.conf --share=/tmp --expose=/run --network bash coreutils gawk grep xz xcb-proto tar findutils sed mesa fontconfig gcc alsa-lib strace bzip2 libxdmcp libx11 libxau libxcb zlib libpng@1.6.37 expat libxkbcommon qtbase qtwayland wayland --preserve=DISPLAY --preserve=WAYLAND_DISPLAY --preserve='.*' --preserve=XDG_SESSION_TYPE \
+  --share="${HOME}/.Wolfram" \
+  --share="${HOME}/.Mathematica" \
+  --share="${HOME}/.cache" \
+  --share="${HOME}/.config" \
+  --share="${HOME}/Wolfram Mathematica" -- \
+  "${HOME}/.local/Mathematica/13/3/SystemFiles/Activation/Linux-x86-64/reqpwd.exe" "$@"

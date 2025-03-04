@@ -44,12 +44,6 @@ export FLASH_ATTN="--flash-attn 1"
 # TODO: --n-gpu-layers 20
 
 # Deepseek: Just 4K. Because deepseek doesn't allow for the use of flash attention it means you can't run quantised qkv
-exec guix shell --expose=/home/dannym --preserve='^LLAMA_' --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server ${FLASH_ATTN} --n-gpu-layers 20 "$@" # working great
+# TODO: gzip hipamd rocm-toolchain
+exec guix shell --expose="${HOME}" --preserve='^LLAMA_' --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server ${FLASH_ATTN} --n-gpu-layers 20 "$@" # working great
 
-exec guix shell --expose=/home/dannym/x --preserve=LD_LIBRARY_PATH --network --container --emulate-fhs coreutils gzip hipamd rocm-toolchain -- ~/x/llama/llamafile-run -m ${HOME}/x/llama/llama-3.2-3b-instruct-q8_0.gguf -ngl 9999 -c 4096
-
-# llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 147, got 146
-exec guix shell --expose=/home/dannym/x --preserve=LD_LIBRARY_PATH --network --container --emulate-fhs coreutils gzip hipamd rocm-toolchain -- ~/x/llama/llamafile-run -m ${HOME}/x/llama/Meta-Llama-3.1-8B-Instruct-Q5_K_M.gguf -ngl 9999 -c 4096
-exec guix shell --expose=/home/dannym/x --network --container --emulate-fhs coreutils gzip -- ~/x/llama/Meta-Llama-3-8B-Instruct.Q5_K_M.llamafile "$@"
-exec guix shell --expose=/home/dannym/backup --network --container --emulate-fhs coreutils gzip -- /home/dannym/x/llama/llamafile-0.7 -m /home/dannym/x/llama/wizardcoder-python-13b-main.llamafile "$@"
-#exec guix shell --network --container --emulate-fhs coreutils gzip -- /home/dannym/x/llama/phi-2.Q5_K_M.llamafile "$@"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-exec guile --no-auto-compile /home/dannym/.config/guix/current/bin/guix shell --container --no-cwd --network \
+exec guile --no-auto-compile "${HOME}/.config/guix/current/bin/guix" shell --container --no-cwd --network \
   --preserve='^DBUS_' \
   --preserve='^DRI_PRIME$' \
   --preserve='^GDK_SCALE$' \
@@ -27,4 +27,4 @@ exec guile --no-auto-compile /home/dannym/.config/guix/current/bin/guix shell --
   --preserve=^LD_DEBUG$ \
   --preserve=^LIBGL_DEBUG$ \
   --expose=/dev/bus/usb --expose=/dev/dri --expose=/dev/input --expose=/dev/uinput --expose=/etc/machine-id --expose=/etc/localtime --expose=/etc/os-release --expose=/sys/class/drm --expose=/sys/class/hwmon --expose=/sys/class/hidraw --expose=/sys/class/input --expose=/sys/class/power_supply --expose=/sys/class/powercap --expose=/sys/dev --expose=/sys/devices --expose=/var/run/dbus --share=/dev/hidraw0 --share=/dev/hidraw1 --share=/dev/hidraw2 --share=/dev/hidraw3 --share=/dev/hidraw4 --share=/dev/hidraw5 --share=/dev/hidraw6 --share=/dev/hidraw7 --share=/dev/hidraw8 --share=/dev/hidraw9 --share=/dev/shm --share=/tmp \
-  --share=/home/dannym/.local/share/guix-sandbox-home=/home/dannym --share=/home/dannym/.config/pulse --share=/run/user/1000/pulse --share=/run/user/1000/bus --share=/run/user/1000/wayland-1 -m /gnu/store/n867jnnsq1xjgx36bzyfcmqd7117f8pn-nonguix-container-manifest.scm -- "$@"
+  --share="${HOME}/.local/share/guix-sandbox-home=${HOME}" --share="${HOME}/.config/pulse" --share=/run/user/1000/pulse --share=/run/user/1000/bus --share=/run/user/1000/wayland-1 -m /gnu/store/n867jnnsq1xjgx36bzyfcmqd7117f8pn-nonguix-container-manifest.scm -- "$@"

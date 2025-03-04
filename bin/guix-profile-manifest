@@ -1,4 +1,4 @@
-#!/home/dannym/.guix-profile/bin/guile
+#!/usr/bin/env guile
 !#
 ;; Given a filesystem path to a profile, return a manifest.
 (use-modules (guix profiles)

@@ -88,7 +88,6 @@ then
 	read s
 	# TODO or use "apt show stellarium" |grep "^location: "
 	fnspec="`EDITOR=echo guix edit ${package}`"
-	#+165 /x/home/dannym/src/guix/gnu/packages/bash.scm
 	IFS=" "
 	set -- ${fnspec}
 	fns="$2"

@@ -1,3 +1,8 @@
 #!/bin/sh
 
-guix shell --container --network --share=/dev --share=/run --share=/dev/shm --share=/dev/dri --share=/run/dbus/system_bus_socket --share=/tmp --share=/home/dannym/.Xauthority --share=/home/dannym/.mplayer --preserve=DISPLAY --preserve='.*' mplayer -- "mplayer" "$@"
+guix shell --container --network --share=/dev --share=/run --share=/dev/shm --share=/dev/dri --share=/run/dbus/system_bus_socket --share=/tmp \
+  --share="${HOME}/.Xauthority" \
+  --share="${HOME}/.mplayer" \
+  --preserve=DISPLAY --preserve='.*' \
+  mplayer -- \
+  "mplayer" "$@"

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Given a list of file names, replace space by "_" in their names (by renaming the files).
+
+set -e
+while [ ! -z "$1" ]
+do
+	s="$1"
+	# TODO check dirname, basename
+	t="$(echo "${s}" |tr ' ' '_')"
+	if ! [ "$s" = "$t" ]
+	then
+		mv "$s" "$t"
+	fi
+	shift
+done

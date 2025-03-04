@@ -64,3 +64,5 @@ Small wrappers that don't fit anywhere else.
 - wolframscript - containerized wolframscript
 - redox - containerized redox OS
 - wrap-llamafile - containerized LLM
+- vllm - alternative to llama-cpp
+- vvimg - color-correct image viewer

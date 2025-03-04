@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# TODO: --no-cwd
+exec guix shell --container --tune vv "$@"

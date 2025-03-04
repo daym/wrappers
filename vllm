@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#[rank0]: RuntimeError: HIP error: invalid device function
+#[rank0]: HIP kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect
+#[rank0]: For debugging consider passing AMD_SERIALIZE_KERNEL=3
+#[rank0]: Compile with `TORCH_USE_HIP_DSA` to enable device-side assertions.
+
+exec docker run -it --network=host --group-add=video --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device /dev/kfd --device /dev/dri -v "${HOME}/x/llama:/app/model" ghcr.io/embeddedllm/vllm-rocm:navi-gguf-690c57c    "$@"

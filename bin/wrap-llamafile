@@ -38,12 +38,7 @@ export FLASH_ATTN="--flash-attn 1"
 
 # TODO: --ctx-size !?
 # --server --host 127.0.0.1
-# too slow: exec guix shell --expose=/home/dannym --network --container --emulate-fhs coreutils gzip llama-cpp -- llama-server -m /home/dannym/x/llama/Mistral-Small-Instruct-2409-Q8_0.gguf "$@"
-# doesn't work well exec guix shell --expose=/home/dannym --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server -m /home/dannym/x/llama/DeepSeek-R1-Distill-Llama-8B-Q2_K.gguf "$@" # TODO: test
-
-# TODO: --n-gpu-layers 20
 
 # Deepseek: Just 4K. Because deepseek doesn't allow for the use of flash attention it means you can't run quantised qkv
 # TODO: gzip hipamd rocm-toolchain
-exec guix shell --expose="${HOME}" --preserve='^LLAMA_' --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server ${FLASH_ATTN} --n-gpu-layers 20 "$@" # working great
-
+exec guix shell --expose="${HOME}" --preserve='^LLAMA_' --network --container --emulate-fhs --tune coreutils gzip llama-cpp -- llama-server ${FLASH_ATTN} --n-gpu-layers 20 "$@"

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec `guix build python-mutagen`/bin/mid3iconv "$@"

@@ -55,6 +55,10 @@ Small wrappers that don't fit anywhere else.
 
 - pdfscissors - crop (empty) borders from PDF files
 
+** Music tools
+
+- mid3iconv - automatically fix encoding problems in ID3 tags
+
 ** Containerized tools
 
 - mplayer - containerized mplayer

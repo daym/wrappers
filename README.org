@@ -36,7 +36,7 @@ Small wrappers that don't fit anywhere else.
 
 ** Workarounds for flatpak image bugs
 
-- flatpak-waylandify
+- flatpak-waylandify - Make an Electron program use ozone platform "auto"--making the programs use Wayland if available
 
 ** Workarounds for emacs or Guix bugs
 

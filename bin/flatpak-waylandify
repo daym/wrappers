@@ -1,5 +1,8 @@
 #!/bin/sh
 
 flatpak override --user --socket=wayland "$1"
-GDK_BACKEND=wayland flatpak run "$1" --enable-features=UseOzonePlatform --ozone-platform=wayland
+# --env=GDK_BACKEND=wayland
+flatpak override --user --env=ELECTRON_OZONE_PLATFORM_HINT=auto "$1"
+#GDK_BACKEND=wayland flatpak run "$1" --enable-features=UseOzonePlatform --ozone-platform=wayland
 
+# To reset: flatpak override --user --reset org.signal.Signal

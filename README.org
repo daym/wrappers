@@ -22,6 +22,7 @@ Small wrappers that don't fit anywhere else.
 - guix-profile-manifest - determine manifest, given a profile path
 - guile-nrepl - start guile including a nREPL on port 7888
 - run-ares-rs - start guile including ARES IDE support
+- local-guix - reconfigure using "local-guix reconfigure /etc/config.scm" in your checkout directory
 
 ** Rust development
 

@@ -12,6 +12,7 @@ Small wrappers that don't fit anywhere else.
 
 ** Guix niceties
 
+- startw - starts wayland and then sway. Useful if you don't want a system-wide desktop.
 - e - edit the given file with emacs
 - try - try out packages without installing them
 - contain - open a container, given a manifest

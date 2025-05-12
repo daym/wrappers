@@ -1,0 +1,6 @@
+#!/bin/sh
+
+guix graph "$@" > a.dot
+sfdp -Goverlap=prism  -Tsvg -o a.svg a.dot
+echo "See a.svg"
+exit 1

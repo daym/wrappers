@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo 'Then run ./pre-inst-env guix system installer --dry-run'
+exec guix environment -W -C -N guix --ad-hoc guile-parted guile-newt guile guile-webutils nano

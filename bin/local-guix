@@ -2,9 +2,10 @@
 
 # Usage: sudo -E local-guix system reconfigure /etc/config.scm
 
-if [ -z "$(git status --untracked-files=no --porcelain)" ]
+if [ -z "`git status --untracked-files=no --porcelain`" ]
 then 
 	exec guix time-machine -C "${HOME}/.config/guix/channels.scm" --url="${PWD}" -- "$@"
+	exit 2
 fi
 echo "git working copy (checkout) is dirty. Stopping" >&2
 exit 1

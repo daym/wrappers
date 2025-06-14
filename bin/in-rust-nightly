@@ -65,8 +65,10 @@ shares="${shares} -v ${HOME}/.config/git:${HOME}/.config/git"
 # TODO: CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 # -v "/etc/ssl:/etc/ssl" is not possible since docker can't resolve the symlinks inside /etc/ssl .
 # TODO: Alternatively, you can also use export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=/usr/bin/arm-linux-gnueabihf-gcc (for the arm-linux-gnueabihf target in this example)
+# docker needs: --user `id -u`:`id -g`
+# podman needs instead: --userns=keep-id
 
-# Docker needs extra: --user "$(id -u)":"$(id -g)"
+# Also possible: --uidmap 1000:0:1 --uidmap 0:1:1000  ; which means map inside-1000 to outside-large
 
 # --net=pasta:-4
-exec podman run -i ${opts} -e LEDGER_COMMAND -e CARGO_PKG_VERSION -e CARGO_MANIFEST_DIR -e HOME -e OUT_DIR -e RUSTC_BOOTSTRAP -e RUSTC_FORCE_INCREMENTAL -e SSH_AGENT_PID -e SSH_AUTH_SOCK -e RUSTFLAGS -e CARGO_NET_OFFLINE -e CARGO_NET_GIT_FETCH_WITH_CLI -e CARGO_LOG -e OXIDE_WTW_ROOT -e RUST_TARGET_PATH -e TARGET_DIR -e PAYLOAD_A -e USER -e RUST_BACKTRACE  -v "${root}:${root}" ${shares} -w "${p}" rust-nightly-extra:latest "$@"
+exec podman run -i ${opts} -e LD -e LEDGER_COMMAND -e CARGO_PKG_VERSION -e CARGO_MANIFEST_DIR -e HOME -e OUT_DIR -e RUSTC_BOOTSTRAP -e RUSTC_FORCE_INCREMENTAL -e SSH_AGENT_PID -e SSH_AUTH_SOCK -e RUSTFLAGS -e CARGO_NET_OFFLINE -e CARGO_NET_GIT_FETCH_WITH_CLI -e CARGO_LOG -e OXIDE_WTW_ROOT -e RUST_TARGET_PATH -e TARGET_DIR -e PAYLOAD_A -e USER -e RUST_BACKTRACE --userns=keep-id -u `id -u`:`id -g` -v "${root}:${root}" ${shares} -w "${p}" rust-nightly-extra:latest "$@"

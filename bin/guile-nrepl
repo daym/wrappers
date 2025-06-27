@@ -1,3 +1,4 @@
 #!/bin/sh
 
-exec guix shell guile-next guile-ares-rs -- guile -c '((@ (nrepl server) run-nrepl-server) #:port 7888)'
+exec guix shell guile guile-ares-rs -- guile -c '((@ (ares server) run-nrepl-server) #:port 7888)'
+#exec guix shell guile-next guile-ares-rs -- guile -c '((@ (nrepl server) run-nrepl-server) #:port 7888)'

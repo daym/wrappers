@@ -1,23 +1,4 @@
 #!/bin/sh
 
 set -e
-
-# TODO: guix shell --export-manifest gcc-toolchain make git > manifest.scm
-
-echo '(specifications->manifest (list' >/tmp/a.scm
-# -C
-while [ -n "$1" ] && ! [ "$1" = "--" ]
-do
-	echo ' "'"$1"'"' >>/tmp/a.scm
-	if [ "$1" = "nim" ]
-	then
-		echo ' "gcc-toolchain"' >>/tmp/a.scm
-	fi
-	shift
-done
-echo '))' >>/tmp/a.scm
-if [ -n "$1" ]
-then
-	shift
-fi
-exec guix shell -m /tmp/a.scm -- "$@"
+exec guix shell "$@"

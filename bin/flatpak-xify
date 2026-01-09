@@ -2,6 +2,7 @@
 
 flatpak override --user --nosocket=wayland --socket=x11 "$1"
 # --env=GDK_BACKEND=wayland
+# These settings are for sway; not sure whether there is a downside for others.
 flatpak override --user --env=_JAVA_AWT_WM_NONREPARENTING=1 --env=AWT_TOOLKIT=MToolkit "$1"
 
 #GDK_BACKEND=wayland flatpak run "$1" --enable-features=UseOzonePlatform --ozone-platform=wayland

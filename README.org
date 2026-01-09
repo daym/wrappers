@@ -42,7 +42,8 @@ Small wrappers that don't fit anywhere else.
 ** Workarounds for flatpak image bugs
 
 - flatpak-list-x-users - List all flatpak apps with X socket access
-- flatpak-waylandify - Make an Electron program use ozone platform "auto"--making the programs use Wayland if available
+- flatpak-waylandify - Make a program use Wayland and NOT X ever
+- flatpak-xify - Make a program use X (as well)
 
 ** Workarounds for emacs or Guix bugs
 

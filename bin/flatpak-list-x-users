@@ -1,0 +1,10 @@
+#!/bin/sh
+
+flatpak list --app --columns=application | \
+while read -r app
+do
+	if flatpak info --show-permissions "$app" | rg -q '^sockets=.*\bx11\b'
+	then
+      echo "$app"
+    fi
+done

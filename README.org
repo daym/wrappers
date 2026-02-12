@@ -27,6 +27,7 @@ Small wrappers that don't fit anywhere else.
 - local-guix - reconfigure using "local-guix system reconfigure /etc/config.scm" in your checkout directory
 - guix-draw-graph - Draw a graphviz graph of the given "guix graph" command line
 - local-guix-installer - Test the guix installer
+- fhs - FHS container that can run most GUI programs, including Conda
 
 ** Rust development
 

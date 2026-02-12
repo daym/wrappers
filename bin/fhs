@@ -1,0 +1,134 @@
+#!/bin/sh
+set -e
+
+NETWORK="--network"
+X11=""
+WAYLAND="yes"
+DBUS=""
+GPU=""
+AUDIO=""
+COMMON=""
+
+# Parse options
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        --no-network)
+            NETWORK=""
+            shift
+            ;;
+        --no-x11)
+            X11="no"
+            shift
+            ;;
+        --no-wayland)
+            WAYLAND="no"
+            shift
+            ;;
+        --no-dbus)
+            DBUS="no"
+            shift
+            ;;
+        --no-gpu)
+            GPU="no"
+            shift
+            ;;
+        --no-audio)
+            AUDIO="no"
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: guix-fhs [--no-network] [--no-x11] [--no-wayland] [--no-dbus] [--no-gpu] [--no-audio] [--] [CMD...]"
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Error">&2
+            exit 2
+            break
+            ;;
+    esac
+done
+
+# X11
+if [ "$X11" != "no" ]
+then
+    X11="--preserve=^DISPLAY$ --preserve=^XAUTHORITY$"
+    [ -d /tmp/.X11-unix ] && X11="$X11 --expose=/tmp/.X11-unix"
+    [ -n "$XAUTHORITY" ] && [ -e "$XAUTHORITY" ] && X11="$X11 --expose=$XAUTHORITY"
+fi
+
+# Wayland
+if [ "$WAYLAND" != "no" ]
+then
+    WAYLAND="--preserve=^WAYLAND_DISPLAY$ --preserve=^XDG_RUNTIME_DIR$ --preserve=^XDG_SESSION_TYPE$"
+    [ -n "$XDG_RUNTIME_DIR" ] && [ -d "$XDG_RUNTIME_DIR" ] && WAYLAND="$WAYLAND --share=$XDG_RUNTIME_DIR"
+fi
+
+# DBus
+if [ "$DBUS" != "no" ]
+then
+    DBUS="--preserve=^DBUS_SESSION_BUS_ADDRESS$"
+    [ -e /run/dbus ] && DBUS="$DBUS --expose=/run/dbus"
+fi
+
+# GPU
+if [ "$GPU" != "no" ]
+then
+    GPU=""
+    [ -d /dev/dri ] && GPU="$GPU --expose=/dev/dri"
+    [ -d /sys/dev ] && GPU="$GPU --expose=/sys/dev"
+    [ -d /sys/devices ] && GPU="$GPU --expose=/sys/devices"
+    [ -e /dev/nvidia0 ] && GPU="$GPU --expose=/dev/nvidia0 --expose=/dev/nvidiactl"
+fi
+
+# Audio
+if [ "$AUDIO" != "no" ]
+then
+    AUDIO="--preserve=^PULSE_SERVER$"
+    [ -d /dev/shm ] && AUDIO="$AUDIO --share=/dev/shm"
+    [ -d /dev/snd ] && AUDIO="$AUDIO --expose=/dev/snd"
+fi
+
+# Common
+[ -e /etc/machine-id ] && COMMON="$COMMON --expose=/etc/machine-id"
+[ -e /etc/localtime ] && COMMON="$COMMON --expose=/etc/localtime"
+COMMON="$COMMON --preserve=^LANG$ --preserve=^LC_ --preserve=^TERM$"
+
+# Default command
+[ $# -eq 0 ] && set -- bash
+
+#PACKAGES="coreutils bash glibc-locales nss-certs gcc-toolchain"
+PACKAGES="-m manifest.scm"
+
+if [ "$CONDA" != "no" ]
+then
+    mkdir -p "${HOME}/.conda/pkgs"
+    CONDA="--preserve=^CONDA --share=${HOME}/.conda/pkgs"
+    # Not Guix
+    #export CONDA_ENVS_DIRS=./envs
+
+    # Yes Guix
+    export CONDA_ENVS_PATH="${PWD}/envs"
+    # CONDA_DEFAULT_ENV=
+    #export CONDA_PKGS_DIRS # conda pkgs /home/dannym/.conda/pkgs  share that.
+    if [ -z "${CONDA_CHANNELS}" ]
+    then
+	    export CONDA_CHANNELS=defaults
+    fi
+fi
+
+exec guix shell --container --emulate-fhs \
+    $CONDA \
+    $NETWORK \
+    $X11 \
+    $WAYLAND \
+    $DBUS \
+    $GPU \
+    $AUDIO \
+    $COMMON \
+    $PACKAGES \
+    -- "$@"

@@ -35,7 +35,7 @@ then
 (use-modules (gnu packages pkg-config))
 (use-modules ((guix licenses) #:prefix license:))
 
-(define %source-dir (getcwd))
+(define %source-dir (dirname (current-filename)))
 
 EOF
 	source='(local-file %source-dir
